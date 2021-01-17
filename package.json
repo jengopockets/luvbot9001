@@ -1,0 +1,26 @@
+{
+  "name": "template_twitchbot",
+  "version": "1.0.0",
+  "description": "BareBones Twitch_bot",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/jengopockets/template_twitchbot.git"
+  },
+  "keywords": [
+    "twitch"
+  ],
+  "author": "jengopockets",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/jengopockets/template_twitchbot/issues"
+  },
+  "homepage": "https://github.com/jengopockets/template_twitchbot#readme",
+  "dependencies": {
+    "dotenv": "^8.2.0",
+    "tmi.js": "^1.7.1"
+  }
+}
