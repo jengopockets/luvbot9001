@@ -1,27 +1,31 @@
-const tmi = require('tmi.js');
-require('dotenv').config()
-
+const chat = require('./chatFunctions')
 const channelName = process.env.CHANNEL
-const options = {
-    options: {
-        debug: true,
-    },
-    connection: {
-        cluster: 'aws',
-        reconnect: true,
-    },
-    identity: {
-        username: process.env.USERNAME,
-        password: process.env.OAUTH_TOKEN
-    },
-    channels:[channelName]
-};
+require('dotenv').config()
+chat.connectChat(channelName, "LuvBot")
+// const tmi = require('tmi.js');
+// require('dotenv').config()
 
-const client = new tmi.client(options);
+// const channelName = process.env.CHANNEL
+// const options = {
+//     options: {
+//         debug: true,
+//     },
+//     connection: {
+//         cluster: 'aws',
+//         reconnect: true,
+//     },
+//     identity: {
+//         username: process.env.USERNAME,
+//         password: process.env.OAUTH_TOKEN
+//     },
+//     channels:[channelName]
+// };
+
+// const client = new tmi.client(options);
 
 
-client.connect();
+// client.connect();
 
-client.on('connected', (address, port) => {
-    client.action(channelName, 'Stumbled in...')
-});
+// client.on('connected', (address, port) => {
+//     client.action(channelName, 'Stumbled in...')
+// });
