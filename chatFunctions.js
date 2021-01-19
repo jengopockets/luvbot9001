@@ -29,6 +29,9 @@ function connectChat(channelName, prevChannel) {
 
     client.on('message', (channel, userState, message, self) => {
         const cmd = message.split(" ")
+        const sender = userState['display-name']
+        console.log('sender', sender);
+        
         if (cmd[0] === '!luv'){
             let passName = cmd[1]
             // console.log("first", passName, passName[0])
