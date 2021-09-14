@@ -1,39 +1,66 @@
+const { generateDeck } = require('./cardGameFunctions/generateDeck')
+const { shuffleDeck } = require('./cardGameFunctions/shuffleDeck')
+const { createPlayer } = require('./cardGameFunctions/createPlayer')
+const { dealCards } = require('./cardGameFunctions/dealCards')
+const { listCards } = require('./cardGameFunctions/listCards')
+const { blackWin } = require('./cardGameFunctions/blackWin')
+const { scoreCheck } = require('./cardGameFunctions/scoreCheck')
 
-const cardArray =["2","3","4","5","6","7","8","9","10","J","Q","K","A"]
-const suits = ["Spades", "Hearts", "Clubs", "Diamonds"];
-let deck = new Array();
-function generateDeck() {
-        
-    for (i of cardArray){
-         // console.log(i);
-         for (x of suits){
-            let weight = parseInt(i)
-            if (i == "J" ||i == "Q" ||i == "K"){
-                weight = 10
-                console.log(i,weight);
-            }
-            if (i == "A"){
-                 weight = 11
-            }
-            let card = {Value: i, Suit: x, Weight: weight}
-            // console.log(card);
-            deck.push(card)
-        }
+
+let playing = false
+
+function blackJack(playerName, cmd, channelName, client){
+    // const client = new tmi.client(options);
     
-    }
-}
-function shuffleDeck(){
-    for(let i = 0; i<10000; i++){
-        let loc1 = Math.floor((Math.random() * deck.length));
-        let loc2 = Math.floor((Math.random() * deck.length));
-        let tmp = deck[loc1];
+    playing = true
+    let deck = shuffleDeck(generateDeck());
+    let bet = cmd;
+    console.log(bet);
 
-        deck[loc1] = deck[loc2]
-        deck[loc2] = tmp
-    }
-}
-generateDeck()
-console.log("generate",deck);
-shuffleDeck()
-console.log("shuffle", deck);
+    let player = createPlayer(playerName)
+    let dealer = createPlayer('House')
+    dealCards(deck, player.hand, 2)
+    dealCards(deck, dealer.hand, 2)
+    let playerCards = listCards(player.hand)
+    let dealerCards = listCards(dealer.hand)
+    client.action(channelName, `The dealer shuffles the deck and deals, @${playerName} you have 2 cards ${playerCards.Cards} for a total of ${playerCards.Weight}  the dealer has [X] [${dealer.hand[1].Value}]` )
+    // console.log("Hand",player.hand);
+    // console.log("After",deck);
+    scoreCheck(playerCards, dealerCards)
+    // let playerScore = scoreCheck(playerCards)
+    if (playerCards.Weight === 21){
+        blackWin(bet)
+        console.log(bet);
+        client.action(channelName, `You have a blackjack! You won ${bet}`);
 
+    }
+
+    
+    
+    client.on('message', (channel, userState, message, self) => {
+        const cmd = message.split(" ")
+            if(playerName === userState.username){
+                switch (cmd[0]) {
+                    case '!hit':
+                        console.log('hit');
+                        dealCards(deck, player.hand, 1)
+                        playerCards = listCards(player.hand)
+                        scoreCheck(playerCards, dealerCards)
+                        console.log(playerCards);
+                        
+                        
+                        break;
+                    
+                    case '!stay':
+                        console.log('stay');
+                        break;
+                    default:
+                        console.log('no cmd');
+                        break;
+                }
+            }
+    });
+    
+}
+
+exports.blackJack = blackJack
